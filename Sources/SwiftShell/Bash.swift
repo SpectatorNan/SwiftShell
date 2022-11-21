@@ -28,8 +28,8 @@ extension CommandRunning {
 
 	 - parameter bashcommand: the bash shell command.
 	 */
-	public func runAsync(bash bashcommand: String, file: String = #file, line: Int = #line) -> AsyncCommand {
-		runAsync("/bin/bash", "-c", bashcommand, file: file, line: line)
+	public func runAsync(bash bashcommand: String, combineOutput: Bool, file: String = #file, line: Int = #line) -> AsyncCommand {
+		runAsync("/bin/bash", "-c",  bashcommand, combineOutput: combineOutput, file: file, line: line)
 	}
 
 	/**
@@ -71,8 +71,8 @@ extension CommandRunning {
 
  - parameter bashcommand: the bash shell command.
  */
-public func runAsync(bash bashcommand: String, file: String = #file, line: Int = #line) -> AsyncCommand {
-	main.runAsync(bash: bashcommand, file: file, line: line)
+public func runAsync(bash bashcommand: String, combineOutput: Bool = false, file: String = #file, line: Int = #line) -> AsyncCommand {
+    main.runAsync(bash: bashcommand, combineOutput: combineOutput, file: file, line: line)
 }
 
 /**

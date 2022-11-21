@@ -258,6 +258,16 @@ public class PrintedAsyncCommand {
 			exit(errormessage: error, file: file, line: line)
 		}
 	}
+    
+    /// Calls `init(unlaunched:)`, then launches the process and exits the application on error.
+    convenience init(launch process: Process, combineOutput: Bool, file: String, line: Int) {
+        self.init(unlaunched: process, combineOutput: combineOutput)
+        do {
+            try process.launchThrowably()
+        } catch {
+            exit(errormessage: error, file: file, line: line)
+        }
+    }
 
 	/// Is the command still running?
 	public var isRunning: Bool { process.isRunning }
@@ -373,9 +383,9 @@ extension CommandRunning {
 	 - parameter executable: Path to an executable file. If not then exit.
 	 - parameter args:       Arguments to the executable.
 	 */
-	public func runAsync(_ executable: String, _ args: Any ..., file: String = #file, line: Int = #line) -> AsyncCommand {
+	public func runAsync(_ executable: String, _ args: Any ..., combineOutput: Bool, file: String = #file, line: Int = #line) -> AsyncCommand {
 		let stringargs = args.flatten().map(String.init(describing:))
-		return AsyncCommand(launch: createProcess(executable, args: stringargs), file: file, line: line)
+		return AsyncCommand(launch: createProcess(executable, args: stringargs), combineOutput: combineOutput, file: file, line: line)
 	}
 
 	/**
@@ -437,8 +447,8 @@ extension CommandRunning {
  - parameter executable: Path to an executable file. If not then exit.
  - parameter args:       Arguments to the executable.
  */
-public func runAsync(_ executable: String, _ args: Any ..., file: String = #file, line: Int = #line) -> AsyncCommand {
-	main.runAsync(executable, args, file: file, line: line)
+public func runAsync(_ executable: String, _ args: Any ..., combineOutput: Bool = false, file: String = #file, line: Int = #line) -> AsyncCommand {
+    main.runAsync(executable, args, combineOutput: combineOutput, file: file, line: line)
 }
 
 /**
